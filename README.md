@@ -19,6 +19,21 @@ en la interfaz; los ejemplos viven en `ejemplos.json`.
 
 ## Instalar y ejecutar
 ```
+python -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
+o
+```
+pip install -r requirements.txt
+streamlit run app.py
+```
+en linux
+```
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
