@@ -1,4 +1,4 @@
-# modelo.py: datos y validacion
+# modelo.py: datos y validacion del modelo de pl
 from fractions import Fraction
 
 MAX_VARS = 8
@@ -7,22 +7,23 @@ SIGNOS = ("<=", ">=", "=")
 
 
 class Problema:
-    # contenedor simple
+    # contenedor simple para el modelo de pl
     def __init__(self, objetivo, nombres, unidades, costos, restricciones, unidad_z=""):
         self.objetivo = objetivo            # min o max
-        self.nombres = nombres
-        self.unidades = unidades
-        self.costos = costos                # lista de Fraction
-        self.restricciones = restricciones  # dicts: nombre, coef, signo, b
+        self.nombres = nombres              # nombres de las variables de decision
+        self.unidades = unidades            # unidades de medida
+        self.costos = costos                # coeficientes cj en z (Fraction)
+        self.restricciones = restricciones  # lista de dicts: nombre, coef, signo, b
         self.unidad_z = unidad_z
 
     @property
     def n(self):
+        # retorna el numero de variables de decision
         return len(self.costos)
 
 
 def fmt(x):
-    # numero bonito
+    # formatea las variables de decision y z a texto sin decimales innecesarios
     if x is None:
         return "-"
     x = Fraction(x)
@@ -32,7 +33,7 @@ def fmt(x):
 
 
 def leer_numero(valor, donde, errores):
-    # texto a Fraction
+    # convierte las entradas a Fraction para no perder precision en las variables
     texto = str(valor).strip().replace(",", ".")
     if texto == "" or texto.lower() in ("nan", "none"):
         errores.append(f"{donde}: campo vacio")
@@ -45,7 +46,7 @@ def leer_numero(valor, donde, errores):
 
 
 def construir_problema(datos):
-    # valida todo, no se cae
+    # valida y empaqueta las variables de decision y restricciones
     errores = []
     if datos.get("objetivo") not in ("min", "max"):
         errores.append("El objetivo debe ser min o max")
@@ -59,12 +60,14 @@ def construir_problema(datos):
         return None, errores
 
     nombres, unidades, costos = [], [], []
+    # aca procesa los nombres y costos cj de cada variable de decision
     for i, v in enumerate(vars_):
         nombres.append(str(v.get("nombre", "")).strip() or f"x{i + 1}")
         unidades.append(str(v.get("unidad", "")).strip())
         costos.append(leer_numero(v.get("costo", ""), f"Costo de x{i + 1}", errores))
 
     filas = []
+    # aca procesa la matriz de coeficientes aij para las variables de decision y los lados derechos bi
     for j, r in enumerate(rests):
         et = f"Restriccion {j + 1}"
         coef = r.get("coef", [])
@@ -83,5 +86,11 @@ def construir_problema(datos):
 
     if errores:
         return None, errores
-    return Problema(datos["objetivo"], nombres, unidades, costos, filas,
-                    str(datos.get("unidad_z", "")).strip()), []
+    return Problema(
+        datos["objetivo"],
+        nombres,
+        unidades,
+        costos,
+        filas,
+        str(datos.get("unidad_z", "")).strip()
+    ), []

@@ -1,62 +1,67 @@
 {
   "Ever Ace (caso real)": {
-    "objetivo": "min", "unidad_z": "USD",
+    "objetivo": "min",
+    "unidad_z": "USD",
     "variables": [
-      {"nombre": "VLSFO", "unidad": "t", "costo": 766},
-      {"nombre": "MGO", "unidad": "t", "costo": 1446}
+      { "nombre": "VLSFO", "unidad": "t", "costo": 766 },
+      { "nombre": "MGO", "unidad": "t", "costo": 1446 }
     ],
     "restricciones": [
-      {"nombre": "Necesidad total", "coef": [1, 1], "signo": ">=", "b": 4000},
-      {"nombre": "Minimo MGO", "coef": [0, 1], "signo": ">=", "b": 300},
-      {"nombre": "Capacidad total", "coef": [1, 1], "signo": "<=", "b": 4500},
-      {"nombre": "Maximo VLSFO", "coef": [1, 0], "signo": "<=", "b": 3800}
+      { "nombre": "Necesidad total (5013 t + 10% reserva)", "coef": [1, 1], "signo": ">=", "b": 5514 },
+      { "nombre": "MGO minimo regulatorio (ECA + Puerto + 10% reserva)", "coef": [0, 1], "signo": ">=", "b": 204 },
+      { "nombre": "Capacidad maxima tanque MGO (758.5 m3)", "coef": [0, 1], "signo": "<=", "b": 645 },
+      { "nombre": "Capacidad total de tanques", "coef": [1, 1], "signo": "<=", "b": 16645 }
     ]
   },
   "Prueba mezcla 3 variables": {
-    "objetivo": "min", "unidad_z": "USD",
+    "objetivo": "min",
+    "unidad_z": "USD",
     "variables": [
-      {"nombre": "Insumo A", "unidad": "kg", "costo": 5},
-      {"nombre": "Insumo B", "unidad": "kg", "costo": 2},
-      {"nombre": "Insumo C", "unidad": "kg", "costo": 4}
+      { "nombre": "Insumo A", "unidad": "kg", "costo": 5 },
+      { "nombre": "Insumo B", "unidad": "kg", "costo": 2 },
+      { "nombre": "Insumo C", "unidad": "kg", "costo": 4 }
     ],
     "restricciones": [
-      {"nombre": "Total minimo", "coef": [1, 1, 1], "signo": ">=", "b": 10},
-      {"nombre": "Aporte minimo", "coef": [1, 0, 2], "signo": ">=", "b": 6},
-      {"nombre": "Tope insumo B", "coef": [0, 1, 0], "signo": "<=", "b": 8}
+      { "nombre": "Total minimo", "coef": [1, 1, 1], "signo": ">=", "b": 10 },
+      { "nombre": "Aporte minimo", "coef": [1, 0, 2], "signo": ">=", "b": 6 },
+      { "nombre": "Tope insumo B", "coef": [0, 1, 0], "signo": "<=", "b": 8 }
     ]
   },
   "Prueba infactible": {
-    "objetivo": "min", "unidad_z": "USD",
+    "objetivo": "min",
+    "unidad_z": "USD",
     "variables": [
-      {"nombre": "x1", "unidad": "u", "costo": 1},
-      {"nombre": "x2", "unidad": "u", "costo": 1}
+      { "nombre": "x1", "unidad": "u", "costo": 1 },
+      { "nombre": "x2", "unidad": "u", "costo": 1 }
     ],
     "restricciones": [
-      {"nombre": "Minimo", "coef": [1, 1], "signo": ">=", "b": 10},
-      {"nombre": "Maximo", "coef": [1, 1], "signo": "<=", "b": 5}
+      { "nombre": "Minimo", "coef": [1, 1], "signo": ">=", "b": 10 },
+      { "nombre": "Maximo", "coef": [1, 1], "signo": "<=", "b": 5 }
     ]
   },
   "Prueba optimos alternativos (max)": {
-    "objetivo": "max", "unidad_z": "USD",
+    "objetivo": "max",
+    "unidad_z": "USD",
     "variables": [
-      {"nombre": "Producto A", "unidad": "u", "costo": 2},
-      {"nombre": "Producto B", "unidad": "u", "costo": 4}
+      { "nombre": "Producto A", "unidad": "u", "costo": 2 },
+      { "nombre": "Producto B", "unidad": "u", "costo": 4 }
     ],
     "restricciones": [
-      {"nombre": "Horas", "coef": [1, 2], "signo": "<=", "b": 8},
-      {"nombre": "Tope A", "coef": [1, 0], "signo": "<=", "b": 6},
-      {"nombre": "Tope B", "coef": [0, 1], "signo": "<=", "b": 3}
+      { "nombre": "Horas", "coef": [1, 2], "signo": "<=", "b": 8 },
+      { "nombre": "Tope A", "coef": [1, 0], "signo": "<=", "b": 6 },
+      { "nombre": "Tope B", "coef": [0, 1], "signo": "<=", "b": 3 }
     ]
   },
   "Prueba no acotado (max)": {
-    "objetivo": "max", "unidad_z": "USD",
+    "objetivo": "max",
+    "unidad_z": "USD",
     "variables": [
-      {"nombre": "x1", "unidad": "u", "costo": 1},
-      {"nombre": "x2", "unidad": "u", "costo": 1}
+      { "nombre": "x1", "unidad": "u", "costo": 1 },
+      { "nombre": "x2", "unidad": "u", "costo": 1 }
     ],
     "restricciones": [
-      {"nombre": "Diferencia", "coef": [1, -1], "signo": "<=", "b": 2},
-      {"nombre": "Minimo", "coef": [1, 1], "signo": ">=", "b": 1}
+      { "nombre": "Diferencia", "coef": [1, -1], "signo": "<=", "b": 2 },
+      { "nombre": "Minimo", "coef": [1, 1], "signo": ">=", "b": 1 }
     ]
   }
 }
