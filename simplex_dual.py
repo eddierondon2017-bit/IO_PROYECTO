@@ -65,12 +65,9 @@ def resolver(p):
 
     # dual factible?
     if any(dz[j] > 0 for j in range(n)):
-        res.estado = "no_dual_factible"
-        res.mensajes.append("Con estos costos el simplex dual no arranca (no es dual factible). "
-                            "Use el simplex normal o cambie el problema.")
-        guardar(res, "Tabla 0 (inicial)", T, dz, base, cw, "Hay cj - zj positivos")
-        res.T, res.dz, res.base = T, dz, base
-        return res
+        # Si no arranca dual, no rechazamos un problema valido.
+        from arranque_dos_fases import resolver_con_dos_fases
+        return resolver_con_dos_fases(p, res, filas, guardar)
 
     it = 0
     while True:

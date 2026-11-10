@@ -10,6 +10,8 @@ def rango(lo, hi):
 
 
 def calcular(p, r):
+    if getattr(r, "indices_holgura", None) is not None:
+        raise ValueError("El analisis de sensibilidad requiere una base sin filas redundantes; no se muestran precios sombra ambiguos.")
     n, T, dz, base = p.n, r.T, r.dz, r.base
     ncols = len(dz)
     sobj = 1 if p.objetivo == "max" else -1
@@ -42,7 +44,7 @@ def calcular(p, r):
         costos.append({
             "variable": p.nombres[k], "actual": fmt(c), "minimo": a, "maximo": b,
             "frase": f"Mientras el costo de {p.nombres[k]} este entre {a} y {b} {uz}, "
-                     f"la solucion optima no cambia."})
+                     f"la base actual sigue siendo optima (cambiando solo este costo)."})
 
     # precio sombra y rango de cada bi
     rests = []
@@ -67,8 +69,8 @@ def calcular(p, r):
             holg = T[base.index(n + idx[0])][-1]
         a, b = rango(bmin, bmax)
         if precio == 0:
-            frase = (f"{rest['nombre']} no limita la decision (holgura {fmt(holg)}); "
-                     f"cambiarla entre {a} y {b} no cambia z.")
+            frase = (f"{rest['nombre']} tiene precio sombra cero (holgura {fmt(holg)}); "
+                     f"cambiar solo su lado derecho entre {a} y {b} mantiene z constante.")
         else:
             frase = (f"Una unidad mas de {rest['nombre']} cambia z en {fmt(precio)} {uz} "
                      f"mientras su valor este entre {a} y {b}.")

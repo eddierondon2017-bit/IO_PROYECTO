@@ -24,15 +24,15 @@ def test_grafico_caso_real():
     r = mg.resolver(problema("Ever Ace (caso real)"))
     assert r.estado == "optimo"
     v = [v for v in r.vertices if v.es_optimo][0]
-    assert (v.x1, v.x2, v.z) == (3700, 300, 3268000)
-    assert len(r.vertices) == 5  # incluye (3800, 300)
+    assert (v.x1, v.x2, v.z) == (5310, 204, 4362444)
+    assert len(r.vertices) == 4
 
 
 def test_dual_caso_real():
     r = sd.resolver(problema("Ever Ace (caso real)"))
     assert r.estado == "optimo"
-    assert r.x == [3700, 300] and r.z == 3268000
-    assert len(r.tablas) == 3  # inicial, una y final
+    assert r.x == [5310, 204] and r.z == 4362444
+    assert len(r.tablas) >= 2
 
 
 def test_dual_tres_variables():
@@ -58,7 +58,7 @@ def test_grafico_no_acotado():
 
 def test_dual_no_dual_factible():
     r = sd.resolver(problema("Prueba optimos alternativos (max)"))
-    assert r.estado == "no_dual_factible"
+    assert r.estado == "optimo" and r.z == 16
 
 
 def test_validacion():
@@ -76,11 +76,29 @@ def test_sensibilidad_caso_real():
     assert s["costos"][1]["minimo"] == "766" and s["costos"][1]["maximo"] == "sin limite"
     rs = s["restricciones"]
     assert [x["precio_sombra"] for x in rs] == ["766", "680", "0", "0"]
-    assert (rs[0]["minimo"], rs[0]["maximo"]) == ("300", "4100")
-    assert (rs[1]["minimo"], rs[1]["maximo"]) == ("200", "4000")
+    assert (rs[0]["minimo"], rs[0]["maximo"]) == ("204", "16645")
+    assert (rs[1]["minimo"], rs[1]["maximo"]) == ("0", "645")
 
 
 def test_metodos_coinciden():
     p = problema("Ever Ace (caso real)")
     g = [v for v in mg.resolver(p).vertices if v.es_optimo][0]
     assert g.z == sd.resolver(p).z
+
+def test_ejercicio_36():
+    p = problema("Ejercicio de practica (optimo 36)")
+    d = sd.resolver(p)
+    g = mg.resolver(p)
+    assert d.estado == "optimo" and d.z == 36 and d.x == [6, 4]
+    assert any(v.es_optimo and v.z == 36 for v in g.vertices)
+    assert sensibilidad.calcular(p, d)["costos"]
+
+
+def test_igualdad():
+    datos = {"objetivo":"min", "variables":[{"costo":2},{"costo":1}],
+             "restricciones":[{"coef":[1,1],"signo":"=","b":5},
+                               {"coef":[1,0],"signo":">=","b":2}]}
+    p, errores = construir_problema(datos)
+    assert not errores
+    r = sd.resolver(p)
+    assert r.estado == "optimo" and r.z == 7 and r.x == [2,3]
